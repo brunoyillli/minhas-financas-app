@@ -7,6 +7,7 @@ import { withRouter } from 'react-router-dom'
 import LancamentoService from "../../app/service/lancamentoService";
 import * as messages from '../../components/toastr'
 import LocalStorageService from "../../app/service/localStorageService";
+import { error } from "toastr";
 
 class CadastroLancamentos extends React.Component {
 
@@ -22,7 +23,44 @@ class CadastroLancamentos extends React.Component {
         mes: '',
         ano: '',
         tipo: '',
-        status: ''
+        status: '',
+        usuario: null
+    }
+
+    componentDidMount() {
+        const params = this.props.match.params
+        console.log(params.id);
+
+        if (params.id) {
+            this.service.obterPorId(params.id)
+                .then(response => {
+                    this.setState({...response.data })
+                }).catch(error => {
+                    messages.mensagemErro(error.response.data);
+                })
+        }
+    }
+
+    atualizar = () => {
+        const { descricao, valor, mes, ano, tipo, id, usuario, status } = this.state;
+        const lancamento = {
+            descricao,
+            valor,
+            mes,
+            ano,
+            tipo,
+            id,
+            usuario,
+            status
+        }
+
+        this.service.atualizar(lancamento)
+            .then(response => {
+                this.props.history.push("/consulta-lancamentos")
+                messages.mensagemSucesso('Lançamento atualizado com sucesso!')
+            }).catch(error => {
+                messages.mensagemErro(error.response.data)
+            })
     }
 
     submit = () => {
@@ -126,6 +164,7 @@ class CadastroLancamentos extends React.Component {
                 <div className="row">
                     <div className="col-md-6">
                         <button onClick={this.submit} className="btn btn-success">Salvar</button>
+                        <button onClick={this.atualizar} className="btn btn-primary">Atualizar</button>
                         <button onClick={e => this.props.history.push("/consulta-lancamentos")}
                             className="btn btn-danger">Cancelar</button>
                     </div>
