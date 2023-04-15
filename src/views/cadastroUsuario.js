@@ -19,7 +19,7 @@ class CadastroUsuario extends React.Component {
     }
 
     cadastrar = () => {
-        const {nome, email, senha, senhaRepeticao } = this.state
+        const { nome, email, senha, senhaRepeticao } = this.state
         const usuario = {
             nome,
             email,
@@ -27,9 +27,9 @@ class CadastroUsuario extends React.Component {
             senhaRepeticao
         }
 
-        try{
+        try {
             this.service.validar(usuario);
-        }catch(erro){
+        } catch (erro) {
             const msgs = erro.mensagens;
             msgs.forEach(msg => mensagemErro(msg));
             return false;
@@ -86,8 +86,12 @@ class CadastroUsuario extends React.Component {
                                     onChange={e => this.setState({ senhaRepeticao: e.target.value })}
                                     placeholder='Digite sua senha novamente' />
                             </FormGroup>
-                            <button onClick={this.cadastrar} type='button' className='btn btn-default'>Salvar</button>
-                            <button onClick={this.cancelar} type='button' className='btn btn-danger'>Cancelar</button>
+                            <button onClick={this.cadastrar} type='button' className='btn btn-default'>
+                                <i className="pi pi-save"></i> Salvar
+                            </button>
+                            <button onClick={this.cancelar} type='button' className='btn btn-danger'>
+                                <i className="pi pi-times"></i> Cancelar
+                            </button>
                         </div>
                     </div>
                 </div>

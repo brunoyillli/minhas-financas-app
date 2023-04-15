@@ -28,14 +28,14 @@ class CadastroLancamentos extends React.Component {
         atualizando: false
     }
 
-    componentDidMount(){
+    componentDidMount() {
         const params = this.props.match.params
-       
-        if(params.id){
+
+        if (params.id) {
             this.service
                 .obterPorId(params.id)
                 .then(response => {
-                    this.setState( {...response.data, atualizando: true} )
+                    this.setState({ ...response.data, atualizando: true })
                 })
                 .catch(erros => {
                     messages.mensagemErro(erros.response.data)
@@ -47,7 +47,7 @@ class CadastroLancamentos extends React.Component {
         const { descricao, valor, mes, ano, tipo, status, usuario, id } = this.state;
 
         const lancamento = { descricao, valor, mes, ano, tipo, usuario, status, id };
-        
+
         this.service
             .atualizar(lancamento)
             .then(response => {
@@ -70,9 +70,9 @@ class CadastroLancamentos extends React.Component {
             tipo,
             usuario: usuarioLogado.id
         }
-        try{
+        try {
             this.service.validar(lancamento)
-        }catch(erro){
+        } catch (erro) {
             const mensagens = erro.mensagens;
             mensagens.forEach(msg => messages.mensagemErro(msg));
             return false;
@@ -165,14 +165,20 @@ class CadastroLancamentos extends React.Component {
                 <div className="row">
                     <div className="col-md-6">
                         {
-                            this.state.atualizando? (
-                                <button onClick={this.atualizar} className="btn btn-primary">Atualizar</button>
+                            this.state.atualizando ? (
+                                <button onClick={this.atualizar} className="btn btn-primary">
+                                    <i className="pi pi-refresh"></i> Atualizar
+                                </button>
                             ) : (
-                                <button onClick={this.submit} className="btn btn-success">Salvar</button>
+                                <button onClick={this.submit} className="btn btn-success">
+                                    <i className="pi pi-save"></i> Salvar
+                                </button>
                             )
                         }
                         <button onClick={e => this.props.history.push("/consulta-lancamentos")}
-                            className="btn btn-danger">Cancelar</button>
+                            className="btn btn-danger">
+                            <i className="pi pi-times"></i> Cancelar
+                        </button>
                     </div>
                 </div>
             </Card>
