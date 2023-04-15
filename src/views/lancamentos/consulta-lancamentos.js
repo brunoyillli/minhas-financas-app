@@ -58,6 +58,20 @@ class ConsultaLancamentos extends React.Component {
         this.setState({ showConfirmDialog: true, lancamentoDeletar: lancamento })
     }
 
+    alterarStatus = (lancamento, status) =>{
+        this.service.alterarStatus(lancamento.id, status)
+        .then(response => {
+            const lancamentos = this.state.lancamentos;
+            const index = lancamentos.indexOf(lancamento);
+            if(index !== -1){
+                lancamento['status'] = status;
+                lancamentos[index] = lancamento
+                this.setState({lancamento});
+            }
+            messages.mensagemSucesso("Status atualizado com sucesso!")
+        })
+    }
+
     cancelarDelecao = () => {
         this.setState({ showConfirmDialog: false, lancamentoDeletar: {} })
     }
@@ -133,7 +147,8 @@ class ConsultaLancamentos extends React.Component {
                         <div className="bs-component">
                             <LancamentosTable lancamentos={this.state.lancamentos}
                                 deleteAction={this.abrirConfirmacao}
-                                editAction={this.editar} />
+                                editAction={this.editar} 
+                                alterarStatus={this.alterarStatus}/>
                         </div>
                     </div>
                 </div>
