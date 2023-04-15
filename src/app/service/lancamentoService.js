@@ -1,12 +1,12 @@
 import ApiService from "../apiservice";
-
+import ErroValidacao from "../exception/erroValidacao";
 export default class LancamentoService extends ApiService {
 
     constructor() {
         super('/api/lancamentos')
     }
 
-    obterListaMeses(){
+    obterListaMeses() {
         return [
             { label: 'Selecione ...', value: '' },
             { label: 'Janeiro', value: 1 },
@@ -24,7 +24,7 @@ export default class LancamentoService extends ApiService {
         ]
     }
 
-    obterListaTipos(){
+    obterListaTipos() {
         return [
             { label: 'Selecione ...', value: '' },
             { label: 'Despesa', value: 'DESPESA' },
@@ -47,30 +47,53 @@ export default class LancamentoService extends ApiService {
             params = `${params}&status=${lancamentoFiltro.status}`
         }
 
-        if(lancamentoFiltro.usuario){
+        if (lancamentoFiltro.usuario) {
             params = `${params}&usuario=${lancamentoFiltro.usuario}`
         }
 
-        if(lancamentoFiltro.descricao){
+        if (lancamentoFiltro.descricao) {
             params = `${params}&descricao=${lancamentoFiltro.descricao}`
         }
 
         return this.get(params)
     }
-    
-    salvar(lancamento){
+
+    salvar(lancamento) {
         return this.post('/', lancamento);
     }
 
-    atualizar(lancamento){
+    atualizar(lancamento) {
         return this.put(`/${lancamento.id}`, lancamento);
     }
 
-    deletar(id){
+    deletar(id) {
         return this.delete(`/${id}`)
     }
 
-    obterPorId(id){
+    obterPorId(id) {
         return this.get(`/${id}`);
+    }
+
+    validar(lancamento) {
+        const erros = [];
+
+        if (!lancamento.ano) {
+            erros.push("Informe o Ano.")
+        }
+        if (!lancamento.mes) {
+            erros.push("Informe o Mês.")
+        }
+        if (!lancamento.descricao) {
+            erros.push("Informe a Descrição.")
+        }
+        if (!lancamento.valor) {
+            erros.push("Informe o Valor.")
+        }
+        if (!lancamento.tipo) {
+            erros.push("Informe o Tipo.")
+        }
+        if (erros && erros.length > 0) {
+            throw new ErroValidacao(erros);
+        }
     }
 }
